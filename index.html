@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="./jquery-3.1.0.js"></script>
+    <style>
+        * {
+            font-family: 'Microsoft Yahei';
+            font-size: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+</body>
+<script>
+    $.fn.rater = function(options) {
+        var defaultObj = {
+            size: 5
+        };
+        $.extend(defaultObj, options);
+
+        var str = "";
+        for (var i = 0; i < defaultObj.size; i++) {
+            str += "<span>☆</span>";
+        }
+
+        this
+            .html(str)
+            .on('click', 'span', function() {
+                $(this).parent().attr('clicked', '1');
+                $(this).text('★').prevAll().text('★').end().nextAll().text('☆');
+                defaultObj.cb && (typeof defaultObj.cb === 'function') && defaultObj.cb();
+                $(this).parent().off('click');
+            })
+            .on('mouseover', "span", function() {
+                if ($(this).parent().attr('clicked') === '1') return;
+                $(this).text('★').prevAll().text('★').end().nextAll().text('☆');
+            })
+            .on('mouseout', "span", function() {
+                if ($(this).parent().attr('clicked') === '1') return;
+                $(this).text('☆').siblings().text('☆')
+            });
+    }
+
+    $('div').rater({
+        size: 10,
+        cb: function() {
+            alert('点击');
+        }
+    });
+</script>
+
+</html>
